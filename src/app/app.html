@@ -17,4 +17,5 @@
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+<!--content is a template variable is being used with the ion menu, that is what it is referring to. It means that this ion element is being declared a the main view-->
 <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
