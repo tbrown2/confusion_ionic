@@ -41,6 +41,7 @@ export class MenuPage implements OnInit {
   }
 
   dishSelected(event, dish) {
+    //not using event at all
     //makes dish detail page as the child page
     //sending it nav parameters so it knows which  
     //dish we are selecting
