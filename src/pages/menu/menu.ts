@@ -59,7 +59,7 @@ export class MenuPage implements OnInit {
     this.favoriteservice.addFavorite(dish.id);
     this.toastCtrl
       .create({
-        message: 'Dish ' + dish.name + " added as a favorite successfully!",
+        message: dish.name + " added as a favorite successfully!",
         duration: 3000,
       })
       .present();

@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, 
+         ToastController, ActionSheetController, ModalController } from 'ionic-angular';
 import { Dish } from '../../shared/dish';
 import { Comment } from '../../shared/comment';
 import { FavoriteProvider } from '../../providers/favorite/favorite';
-
+import { CommentPage } from '../../pages/comment/comment';
 /**
  * Generated class for the DishdetailPage page.
  *
@@ -29,7 +30,9 @@ export class DishdetailPage {
   	public navParams: NavParams,
   	@Inject('BaseURL') private BaseURL,
     private favoriteservice: FavoriteProvider,
-    private toastCtrl: ToastController) {
+    private toastCtrl: ToastController,
+    private actionCtrl: ActionSheetController,
+    private modalCtrl: ModalController) {
 
   		this.dish = navParams.get('dish');
       this.favorite = this.favoriteservice.isFavorite(this.dish.id);
@@ -59,5 +62,46 @@ export class DishdetailPage {
       })
       .present();
   } 
+
+  options() {
+    let actionSheet = this.actionCtrl.create({
+      title: "Select Actions",
+      buttons: 
+      [
+        {
+          text: "Add To Favorites",
+          handler: () => this.addToFavorites()
+        },
+
+        {
+          text: "Add Comment",
+          handler: () => this.openComment()
+        },
+
+        {
+          text: "Cancel",
+          role: "Cancel",
+          handler: () => {
+            console.log("cancel clicked");
+          }
+        }
+      ],
+    });
+
+    actionSheet.present();
+  }
+
+    openComment() {
+    //turn the reservation page into a modal
+    let modal = this.modalCtrl.create(CommentPage);
+    modal.onDidDismiss( comment => {
+      if (comment.date != "")
+      this.dish.comments.push(comment);
+      else 
+       return;
+    });
+    modal.present();
+  }
+
 
 }
