@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { IonicPage, NavController, NavParams, ItemSliding } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ItemSliding, 
+         LoadingController, ToastController, AlertController } from 'ionic-angular';
 import { FavoriteProvider } from '../../providers/favorite/favorite';
 import { Dish } from '../../shared/dish';
 /**
@@ -22,7 +23,10 @@ export class FavoritesPage implements OnInit {
   constructor(public navCtrl: NavController, 
   	public navParams: NavParams,
   	private favoriteservice: FavoriteProvider,
-  	@Inject('BaseURL') private BaseURL) {
+  	@Inject('BaseURL') private BaseURL,
+    private toastCtrl: ToastController,
+    private loadCtrl: LoadingController,
+    private alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -30,6 +34,7 @@ export class FavoritesPage implements OnInit {
   }
 
   ngOnInit() {
+  	
   	this.favoriteservice.getFavorites()
   	.subscribe(favorites => this.favorites = favorites,
   		errMess => this.errMess = errMess);
@@ -37,9 +42,60 @@ export class FavoritesPage implements OnInit {
 
   deleteFavorite (item: ItemSliding, id: number) {
   	console.log('delete', id);
-  	this.favoriteservice.deleteFavorite(id)
-  		.subscribe(favorites => this.favorites = favorites,
-  		errMess => this.errMess = errMess);
+
+    //creating an alert , but also defining the results within the object 
+    //through usage of arrow functions 
+
+    let alert = this.alertCtrl.create({
+      title: 'Confirm',
+      message: "Are you sure you want to delete from your favorites?",
+      buttons: 
+      [
+        {
+           text: 'Cancel',
+           role: 'Cancel',
+           handler: () => {
+             console.log('Delete cancelled')
+           }
+        },
+
+        {
+          text: 'Delete',
+          handler: () => {
+             //converting loadCtrl return into an object
+            let loading = this.loadCtrl.create({
+              content: "Deleting....",
+
+            });
+            //returning toast as an object
+            let toast = this.toastCtrl
+              .create({
+              message: 'Dish ' + id + ' deleted successfully',
+              duration: 3000,
+            })
+            loading.present();
+
+            this.favoriteservice.deleteFavorite(id)
+              //subscribe success, then error
+              .subscribe(
+              favorites => {
+                            this.favorites = favorites;
+                            loading.dismiss();
+                            toast.present();
+                           }
+                ,
+              errMess => { 
+                           this.errMess = errMess;
+                           loading.dismiss(); 
+                         }
+               );
+          }
+        }
+      ]
+    });
+
+    //after creating the alert object we must resent the object to the user
+    alert.present();
   	item.close();
   }
 
