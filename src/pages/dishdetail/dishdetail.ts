@@ -5,6 +5,7 @@ import { Dish } from '../../shared/dish';
 import { Comment } from '../../shared/comment';
 import { FavoriteProvider } from '../../providers/favorite/favorite';
 import { CommentPage } from '../../pages/comment/comment';
+import { SocialSharing } from '@ionic-native/social-sharing';
 /**
  * Generated class for the DishdetailPage page.
  *
@@ -32,7 +33,8 @@ export class DishdetailPage {
     private favoriteservice: FavoriteProvider,
     private toastCtrl: ToastController,
     private actionCtrl: ActionSheetController,
-    private modalCtrl: ModalController) {
+    private modalCtrl: ModalController,
+    private socialsharing: SocialSharing) {
 
   		this.dish = navParams.get('dish');
       this.favorite = this.favoriteservice.isFavorite(this.dish.id);
@@ -84,7 +86,36 @@ export class DishdetailPage {
           handler: () => {
             console.log("cancel clicked");
           }
-        }
+        },
+        {
+          text: "Share via facebook",
+          handler: () => {
+            //3 parameters, text then image then a url if you want to share (we dont have one) 
+            //returns a promise so we have a then and catch
+            this.socialsharing.shareViaFacebook(
+              this.dish.name + ' -- ' + this.dish.description,
+              this.BaseURL + this.dish.image,
+              ''
+              )
+              .then(() => console.log("success"))
+              .catch(() => console.log("failure"))
+            ;
+          }
+        },
+        {
+          text: "Share via Twitter",
+          handler: () => {
+            //3 parameters, text then image then a url if you want to share (we dont have one) 
+            this.socialsharing.shareViaTwitter(
+              this.dish.name + ' -- ' + this.dish.description,
+              this.BaseURL + this.dish.image,
+              ''
+              )
+              .then(() => console.log("success"))
+              .catch(() => console.log("failure"))
+            ;
+          }
+        },
       ],
     });
 

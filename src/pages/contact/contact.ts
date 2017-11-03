@@ -30,7 +30,7 @@ export class ContactPage {
   	//in the body of the meail by making ishtml true
   	let email = {
   		to: 'confusion@food.net',
-  		subject: '[Confusion] Query',
+  		subject: '[Confusion]: Query',
   		body: 'Dear Sir/Madam',
   		isHtml: true
   	};
