@@ -40,10 +40,15 @@ export class MyApp {
   }
 
   initializeApp() {
+    //platform is a service that provides informationabout the device 
+    //can be used for customizing vertain things 
+    //returns a promise
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
+      //we use a splash screen so that we can access a server and get data 
+      //until the data is loaded wemight notwant to show anything 
       this.splashScreen.hide();
     });
   }
