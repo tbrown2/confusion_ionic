@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EmailComposer } from '@ionic-native/email-composer';
+import { CallNumber } from '@ionic-native/call-number';
 
 /**
  * Generated class for the ContactPage page.
@@ -18,7 +19,8 @@ export class ContactPage {
 
   constructor(public navCtrl: NavController,
    public navParams: NavParams,
-   private emailcomposer: EmailComposer) {
+   private emailcomposer: EmailComposer,
+   private callnumber: CallNumber) {
   }
 
   ionViewDidLoad() {
@@ -37,6 +39,14 @@ export class ContactPage {
   	};
   	//calling our email composer and passing our email object into it
   	this.emailcomposer.open(email);
+  }
+
+  callNum() {
+    console.log("calling...");
+    this.callnumber.callNumber("85212346578", true)
+      .then(() => console.log('Launched Dialer!'))
+      .catch(() => console.log("Error Launching dialer..."));
+
   }
 
 }
